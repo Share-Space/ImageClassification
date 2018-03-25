@@ -104,10 +104,13 @@ def run_inference_on_image(image):
         node_lookup = NodeLookup()
 
         top_k = predictions.argsort()[-FLAGS.num_top_predictions:][::-1]
+        result = []
         for node_id in top_k:
             human_string = node_lookup.id_to_string(node_id)
             score = predictions[node_id]
             print('%s (score = %.5f)' % (human_string, score))
+            result.append(human_string)
+        return result
 
 
 def maybe_download_and_extract():
@@ -133,8 +136,13 @@ def maybe_download_and_extract():
 def classification(path, image):
   maybe_download_and_extract()
   image = os.path.join(path, image)
-  run_inference_on_image(image)
+  result = run_inference_on_image(image)
+  for idx, item in enumerate(result): # make hashtags
+      result[idx] = result[idx].replace(', ', '-')
+      result[idx] = result[idx].replace(' ', '_')
+      result[idx] = '#' + result[idx]
+  return result
 
-
-if __name__ == '__main__':
-    classification("C:", "Terrior.jpg")
+if __name__ == '__main__': # usage
+    result = classification("C:", "Terrior.jpg")
+    print(result)
