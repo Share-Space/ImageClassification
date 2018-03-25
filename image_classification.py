@@ -138,11 +138,12 @@ def classification(path, image):
   image = os.path.join(path, image)
   result = run_inference_on_image(image)
   for idx, item in enumerate(result): # make hashtags
-      result[idx] = result[idx].replace(', ', '-')
-      result[idx] = result[idx].replace(' ', '_')
+      result[idx] = result[idx].replace(', ', '&') # replace with '&'
+      result[idx] = result[idx].replace(' ', '_') # replace with underbars
       result[idx] = '#' + result[idx]
   return result
 
 if __name__ == '__main__': # usage
-    result = classification("C:", "Terrior.jpg")
+    filename=input()
+    result = classification("C:", filename)
     print(result)
