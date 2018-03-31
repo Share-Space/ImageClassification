@@ -137,13 +137,24 @@ def classification(path, image):
   maybe_download_and_extract()
   image = os.path.join(path, image)
   result = run_inference_on_image(image)
+  tags=[]
+  for item in result:
+      if (',' not in item)==False:
+          temp=item.split(', ')
+          for tag in temp:
+              tags.append(tag)
+      else:
+          tags.append(item)
+  result=[]
+  for tag in tags:
+      result.append(tag)
   for idx, item in enumerate(result): # make hashtags
-      result[idx] = result[idx].replace(', ', '&') # replace with '&'
       result[idx] = result[idx].replace(' ', '_') # replace with underbars
       result[idx] = '#' + result[idx]
+  print(result)
   return result
 
 if __name__ == '__main__': # usage
     filename=input()
-    result = classification("C:", filename)
+    result = classification('C:', filename)
     print(result)
